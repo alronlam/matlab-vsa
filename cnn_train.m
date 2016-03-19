@@ -23,6 +23,9 @@ opts.plotDiagnostics = false ;
 opts = vl_argparse(opts, varargin) ;
 
 if ~exist(opts.expDir, 'dir'), mkdir(opts.expDir) ; end
+
+%%%%%% Change the extraction of the training and validation sets depending on your dataset %%%%%%%%%%%%
+
 if isempty(opts.train), opts.train = find(imdb.labels); end %find(imdb.images.set==1) ; end
 if isempty(opts.val), opts.val = find(imdb.labels); end %find(imdb.images.set==2) ; end
 if isnan(opts.train), opts.train = [] ; end
@@ -269,8 +272,10 @@ switch opts.errorType
     error = ~bsxfun(@eq, predictions, reshape(labels, 1, 1, 1, [])) ;
     info.error(end) = info.error(end) +....
       sum(sum(sum(error(:,:,1,:))))/n ;
+  % Not sure, but changed 1:5 to 1:3, because it seems that the number of
+  % classes do not allow for top 5 errors
     info.topFiveError(end) = info.topFiveError(end) + ...
-      sum(sum(sum(min(error(:,:,1:5,:),[],3))))/n ;
+      sum(sum(sum(min(error(:,:,1:3,:),[],3))))/n ;
   case 'binary'
     error = bsxfun(@times, predictions, labels) < 0 ;
     info.error(end) = info.error(end) + sum(error(:))/n ;

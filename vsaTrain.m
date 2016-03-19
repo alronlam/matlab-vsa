@@ -47,6 +47,6 @@ end
 
 % Save the result for later use
 net.layers(end) = [] ;
-net.imageMean = imageMean ;
+% net.imageMean = imageMean ;
 save('results/vsa-experiment/vsa.mat', '-struct', 'net') ;
 
