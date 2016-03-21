@@ -7,20 +7,22 @@ setup;
 % -------------------------------------------------------------------------
 
 % Load character dataset
-imdb = load('matfile.mat') ;
+imdb = load('D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/results/Pure Tests/pure-negative-test/matfile-445-negative.mat') ;
+
 
 % -------------------------------------------------------------------------
 % Part 4.2: initialize a CNN architecture
 % -------------------------------------------------------------------------
 
-net = initializeCharacterCNN() ;
+net = initializeSimpleCNN() ;
+% net = initializeNewCNN() ;
 
 % -------------------------------------------------------------------------
 % Part 4.3: train and evaluate the CNN
 % -------------------------------------------------------------------------
 
 trainOpts.batchSize = 100 ;
-trainOpts.numEpochs = 15 ;
+trainOpts.numEpochs = 10 ;
 trainOpts.continue = true ;
 trainOpts.useGpu = false ;
 trainOpts.learningRate = 0.001 ;
@@ -28,9 +30,9 @@ trainOpts.expDir = 'results/vsa-experiment' ;
 trainOpts = vl_argparse(trainOpts, varargin);
 
 % Take the average image out
-% imdb = load('data/matfile.mat') ;
-% imageMean = mean(imdb.images.data(:)) ;
-% imdb.images.data = imdb.images.data - imageMean ;
+imageMean = mean(imdb.images(:)) ;
+imdb.images = imdb.images - imageMean ;
+net.imageMean = imageMean;
 
 % Convert to a GPU array if needed
 if trainOpts.useGpu

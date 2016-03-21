@@ -26,8 +26,8 @@ if ~exist(opts.expDir, 'dir'), mkdir(opts.expDir) ; end
 
 %%%%%% Change the extraction of the training and validation sets depending on your dataset %%%%%%%%%%%%
 
-if isempty(opts.train), opts.train = find(imdb.labels); end %find(imdb.images.set==1) ; end
-if isempty(opts.val), opts.val = find(imdb.labels); end %find(imdb.images.set==2) ; end
+if isempty(opts.train), opts.train = find(imdb.partitions == 1) ; end
+if isempty(opts.val), opts.val = find(imdb.partitions == 2) ; end
 if isnan(opts.train), opts.train = [] ; end
 
 % -------------------------------------------------------------------------
