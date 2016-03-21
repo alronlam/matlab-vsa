@@ -1,5 +1,5 @@
 % resizedDataDir = 'D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/resized227';
-resizedDataDir = 'D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/dataset_6000/train';
+resizedDataDir = 'D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/dataset_6000';
 matDir = 'D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/matfile.mat';
 
 warning('off', 'MATLAB:REGEXP:ErrorLiteral');
@@ -21,12 +21,12 @@ m = matfile(matDir, 'Writable', true);
 % size(testm.images)
 % size(cell2mat(testm.images))
 
+
 anpFolders = dir(resizedDataDir); % assumed to be all folders
-% anpFolders = anpFolders(anpFolders.isdir);
-% anpFolders = anpFolders(arrayfun(@(x) x.name(1), anpFolders)~='.');
+anpFolders = anpFolders(anpFolders.isDir);
 
 % create training/testing partition
-startFolder = 3;
+startFolder = 1;
 stepFolder = 1;
 lastFolderToProcess = numel(anpFolders);
 limitPerFolder = 10000000;
@@ -86,7 +86,7 @@ for i= startFolder:stepFolder:lastFolderToProcess
               currImages = cat(4, currImages, rgbImage);
           end
       end
-%       disp(['Finished image: ' num2str(j)]);
+      disp(['Finished image: ' num2str(j)]);
     end
     % Append to the mat file
     try

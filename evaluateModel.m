@@ -1,5 +1,6 @@
-testDir = 'D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/test';
-net = load('D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/results/vsa-experiment/vsa.mat') ;
+function [confusionMatrix, precision, recall, f_measure, accuracy] = evaluateModel(testDir, net)
+% testDir = 'D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/test';
+% net = load('D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/results/vsa-experiment/vsa.mat') ;
 anpDir =  'D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/final_anps.txt';
 sentimentScores = readSentimentScores(anpDir);
 anpFolders = dir(testDir);
@@ -20,6 +21,7 @@ for i = 3:nFolders
 %     that the test images are 227x227
         im_ = im2single(im_);
         im_ = im_ - net.imageMean;
+%         im_ = 255 * im_;
 
         res = vl_simplenn(net, im_);
         scores = squeeze(gather(res(end).x)) ;
@@ -41,7 +43,7 @@ end
 
 f_measure = 2 .* precision .* recall ./ (precision + recall);
 
-accurac
+accuracy = trace(confusionMatrix) / sum(sum(confusionMatrix));
 
 disp('Confusion Matrix')
 disp(confusionMatrix)
@@ -51,6 +53,8 @@ disp('Recall')
 disp(recall)
 disp('F-Measure')
 disp(f_measure)
+disp('Accuracy')
+disp(accuracy)
 
 % Calculate Precision and Recall here
   

@@ -7,14 +7,14 @@ setup;
 % -------------------------------------------------------------------------
 
 % Load character dataset
-imdb = load('D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/results/Pure Tests/pure-negative-test/matfile-445-negative.mat') ;
+imdb = load('matfile-1525.mat') ;
 
 
 % -------------------------------------------------------------------------
 % Part 4.2: initialize a CNN architecture
 % -------------------------------------------------------------------------
 
-net = initializeSimpleCNN() ;
+net = initializeSimpleCNN2() ;
 % net = initializeNewCNN() ;
 
 % -------------------------------------------------------------------------
@@ -22,7 +22,7 @@ net = initializeSimpleCNN() ;
 % -------------------------------------------------------------------------
 
 trainOpts.batchSize = 100 ;
-trainOpts.numEpochs = 10 ;
+trainOpts.numEpochs = 30 ;
 trainOpts.continue = true ;
 trainOpts.useGpu = false ;
 trainOpts.learningRate = 0.001 ;
@@ -51,4 +51,19 @@ end
 net.layers(end) = [] ;
 % net.imageMean = imageMean ;
 save('results/vsa-experiment/vsa.mat', '-struct', 'net') ;
+
+% Perform evaluation
+testDir = 'D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/dataset_6000/test';
+net = load('D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/results/vsa-experiment/vsa.mat') ;
+[confusionMatrix, precision, recall, f_measure, accuracy] = evaluateModel(testDir, net);
+disp('Confusion Matrix')
+disp(confusionMatrix)
+disp('Precision')
+disp(precision)
+disp('Recall')
+disp(recall)
+disp('F-Measure')
+disp(f_measure)
+disp('Accuracy')
+disp(accuracy)
 
