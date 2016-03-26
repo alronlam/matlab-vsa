@@ -1,8 +1,8 @@
 % Constants
-instancesPerClass = 2000;
-validationPercentage = 0.1;
+instancesPerClass = 1500;
+validationPercentage = 1/3;
 maxInstancesPerFolder = 300;
-newDatasetDir = ['new_dataset_' date];
+newDatasetDir = ['dataset_4500_1500'];
 setSubDir = 'train';
 
 % Sentiment Scores

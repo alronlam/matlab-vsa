@@ -1,5 +1,5 @@
 % resizedDataDir = 'D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/resized227';
-resizedDataDir = 'D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/dataset_6000/train';
+resizedDataDir = 'D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/dataset_4500_1500/train';
 matDir = 'D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/matfile.mat';
 
 warning('off', 'MATLAB:REGEXP:ErrorLiteral');

@@ -7,14 +7,14 @@ setup;
 % -------------------------------------------------------------------------
 
 % Load character dataset
-imdb = load('matfile-1525.mat') ;
+imdb = load('matfile-4500-1500.mat') ;
 
 
 % -------------------------------------------------------------------------
 % Part 4.2: initialize a CNN architecture
 % -------------------------------------------------------------------------
 
-net = initializeSimpleCNN2() ;
+net = initializeSimpleCNN() ;
 % net = initializeNewCNN() ;
 
 % -------------------------------------------------------------------------
@@ -26,7 +26,7 @@ trainOpts.numEpochs = 30 ;
 trainOpts.continue = true ;
 trainOpts.useGpu = false ;
 trainOpts.learningRate = 0.001 ;
-trainOpts.expDir = 'results/vsa-experiment' ;
+trainOpts.expDir = 'results/Architectural Tests/vsa-experiment-4500-1500-oldarch-less-epochs';
 trainOpts = vl_argparse(trainOpts, varargin);
 
 % Take the average image out
@@ -49,21 +49,13 @@ end
 
 % Save the result for later use
 net.layers(end) = [] ;
-% net.imageMean = imageMean ;
-save('results/vsa-experiment/vsa.mat', '-struct', 'net') ;
+save([trainOpts.expDir '/vsa.mat'], '-struct', 'net') ;
 
 % Perform evaluation
-testDir = 'D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/dataset_6000/test';
-net = load('D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/results/vsa-experiment/vsa.mat') ;
-[confusionMatrix, precision, recall, f_measure, accuracy] = evaluateModel(testDir, net);
-disp('Confusion Matrix')
-disp(confusionMatrix)
-disp('Precision')
-disp(precision)
-disp('Recall')
-disp(recall)
-disp('F-Measure')
-disp(f_measure)
-disp('Accuracy')
-disp(accuracy)
+testDir = 'D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/dataset_4500_1500/test';
+[confusionMatrix, precision, recall, f_measure, accuracy, summaryString] = evaluateModel(testDir, net);
+disp(summaryString)
+
+metricsFile = fopen([trainOpts.expDir '/metrics.txt'], 'w');
+fprintf(metricsFile, summaryString);
 
