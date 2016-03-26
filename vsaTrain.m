@@ -9,12 +9,16 @@ setup;
 % Load character dataset
 imdb = load('matfile-4500-1500.mat') ;
 
-
+descriptions = {'Simple CNN With 3 FCs'; 'Simple CNN with 4 FCs'; 'Simple CNN w/ Relu'; 'New CNN with less Relu'};
+nets = [initializeSimpleCNNWithMoreFC(), initializeSimpleCNNWithEvenMoreFC()...
+        initializeSimpleCNNWRelu(), initializeNewCNNWoRelu()];
+    
+for i=1:4
 % -------------------------------------------------------------------------
 % Part 4.2: initialize a CNN architecture
 % -------------------------------------------------------------------------
-
-net = initializeSimpleCNN() ;
+net = nets(i);
+% net = initializeSimpleCNN() ;
 % net = initializeNewCNN() ;
 
 % -------------------------------------------------------------------------
@@ -22,11 +26,11 @@ net = initializeSimpleCNN() ;
 % -------------------------------------------------------------------------
 
 trainOpts.batchSize = 100 ;
-trainOpts.numEpochs = 30 ;
+trainOpts.numEpochs = 40 ;
 trainOpts.continue = true ;
 trainOpts.useGpu = false ;
 trainOpts.learningRate = 0.001 ;
-trainOpts.expDir = 'results/Architectural Tests/vsa-experiment-4500-1500-oldarch-less-epochs';
+trainOpts.expDir = ['results/New Architectural Tests/vsa-experiment-' char(descriptions(i))];
 trainOpts = vl_argparse(trainOpts, varargin);
 
 % Take the average image out
@@ -59,3 +63,4 @@ disp(summaryString)
 metricsFile = fopen([trainOpts.expDir '/metrics.txt'], 'w');
 fprintf(metricsFile, summaryString);
 
+end
