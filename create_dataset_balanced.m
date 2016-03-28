@@ -2,7 +2,7 @@
 instancesPerClass = 1500;
 validationPercentage = 1/3;
 maxInstancesPerFolder = 300;
-newDatasetDir = ['dataset_4500_1500'];
+newDatasetDir = ['dataset_4500_1500_2'];
 setSubDir = 'train';
 
 % Sentiment Scores

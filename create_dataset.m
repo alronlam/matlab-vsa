@@ -1,6 +1,6 @@
 % resizedDataDir = 'D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/resized227';
-resizedDataDir = 'D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/dataset_4500_1500/train';
-matDir = 'D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/matfile.mat';
+resizedDataDir = 'D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/dataset_4500_1500_2/train';
+matDir = 'D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/matfile-4500-1500-2.mat';
 
 warning('off', 'MATLAB:REGEXP:ErrorLiteral');
 anpDir =  'D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/final_anps.txt';

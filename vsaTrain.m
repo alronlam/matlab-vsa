@@ -9,11 +9,16 @@ setup;
 % Load character dataset
 imdb = load('matfile-4500-1500.mat') ;
 
-descriptions = {'Simple CNN With 3 FCs'; 'Simple CNN with 4 FCs'; 'Simple CNN w/ Relu'; 'New CNN with less Relu'};
-nets = [initializeSimpleCNNWithMoreFC(), initializeSimpleCNNWithEvenMoreFC()...
-        initializeSimpleCNNWRelu(), initializeNewCNNWoRelu()];
+% vgg_net = load('imagenet-vgg-f.mat');
+% vl_displaysimplenn(vgg_net);
+
+descriptions = { 'Simple CNN with Relu' };
+nets = [  initializeSimpleCNNWRelu()];
+% descriptions = {'Simple CNN With 3 FCs'; 'Simple CNN with 4 FCs'; 'Simple CNN w/ Relu'; 'New CNN with less Relu'};
+% nets = [initializeSimpleCNNWithMoreFC(), initializeSimpleCNNWithEvenMoreFC()...
+%         initializeSimpleCNNWRelu(), initializeNewCNNWoRelu()];
     
-for i=1:4
+for i=1:numel(nets)
 % -------------------------------------------------------------------------
 % Part 4.2: initialize a CNN architecture
 % -------------------------------------------------------------------------
@@ -26,7 +31,7 @@ net = nets(i);
 % -------------------------------------------------------------------------
 
 trainOpts.batchSize = 100 ;
-trainOpts.numEpochs = 40 ;
+trainOpts.numEpochs = 15 ;
 trainOpts.continue = true ;
 trainOpts.useGpu = false ;
 trainOpts.learningRate = 0.001 ;

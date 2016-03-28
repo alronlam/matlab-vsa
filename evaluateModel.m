@@ -1,7 +1,7 @@
 function [confusionMatrix, precision, recall, f_measure, accuracy, summaryString] = evaluateModel(testDir, net)
 
 % testDir = 'dataset_4500_1500/test';
-% net = load('results/Old Tests/vsa-experiment-686epochs-newarch/vsa.mat') ;
+% net = load('results/New Architectural Tests/vsa-experiment-Close CNN/vsa.mat') ;
 try
     net.imageMean;
 catch exception
@@ -24,13 +24,13 @@ for i = 3:nFolders
     disp(['Processing folder: ' currAnpFolder.name '(' num2str(correctClass) ')'])
     for j=3:nImages
         im = imread([currAnpFolderDir '/' anpImages(j).name]);
-        im_ = resizeImg(im, 227); % not needed for now because it is assumed
+%         im_ = resizeImg(im, 227); % not needed for now because it is assumed
 %     that the test images are 227x227
-        im_ = im2single(im_);
+        im_ = im2single(im);
         try
             im_ = im_ - net.imageMean;
         catch exception
-%            disp('No image mean') 
+           disp('No image mean') 
         end
         im_ = 255 * im_;
 
@@ -52,7 +52,9 @@ for i=1:3
     recall(i) = confusionMatrix(i,i) / recall(i);
 end
 
-f_measure = 2 .* precision .* recall ./ (precision + recall);
+
+% f_measure = harmean(cat(1, precision, recall), 1);
+f_measure = 2 * ( precision .* recall ) ./ (precision + recall);
 
 accuracy = trace(confusionMatrix) / sum(sum(confusionMatrix));
 
@@ -67,6 +69,8 @@ summaryString = [summaryString sprintf('Precision, Recall, F-Measure:\n') ...
     sprintf('%0.4f\t%0.4f\t%0.4f\n', ...
                         precision, recall, f_measure)];
 
+%                     disp(summaryString);
+                    
 % summaryString = ['Confusion Matrix' char(10) mat2str(confusionMatrix) ...
 %     char(10) 'Precision: '  num2str(precision) ...
 %     char(10) 'Recall: ' num2str(recall) ...

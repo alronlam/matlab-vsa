@@ -1,5 +1,6 @@
-net = load('results/vsa-experiment/vsa.mat') ;
-% vl_simplenn_display(net) ;
+net = load('results/New Architectural Tests/vsa-experiment-Simple CNN With 3 FCs/vsa.mat') ;
+whos net
+vl_simplenn_display(net) ;
 
 im = imread('D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/resized227/abandoned_cemetery/257001412_fc7e01b5ea.jpg');
 im_ = resizeImg(im, 227);
