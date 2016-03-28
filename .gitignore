@@ -3,4 +3,6 @@ resized/
 resized227/
 bi_concepts1553/
 test/
-matfile.mat
+*.mat
+results/
+data*/

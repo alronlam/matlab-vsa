@@ -1,0 +1,6 @@
+Confusion Matrix
+[48 1 251;0 0 0;0 0 0]
+Precision: 1  0  0
+Recall: 0.16           NaN           NaN
+F-Measure: 0.2758621           NaN           NaN
+Accuracy: 0.16

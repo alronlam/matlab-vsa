@@ -7,13 +7,24 @@ setup;
 % -------------------------------------------------------------------------
 
 % Load character dataset
-imdb = load('matfile.mat') ;
+imdb = load('matfile-4500-1500.mat') ;
 
+% vgg_net = load('imagenet-vgg-f.mat');
+% vl_displaysimplenn(vgg_net);
+
+descriptions = { 'Simple CNN with Relu' };
+nets = [  initializeSimpleCNNWRelu()];
+% descriptions = {'Simple CNN With 3 FCs'; 'Simple CNN with 4 FCs'; 'Simple CNN w/ Relu'; 'New CNN with less Relu'};
+% nets = [initializeSimpleCNNWithMoreFC(), initializeSimpleCNNWithEvenMoreFC()...
+%         initializeSimpleCNNWRelu(), initializeNewCNNWoRelu()];
+    
+for i=1:numel(nets)
 % -------------------------------------------------------------------------
 % Part 4.2: initialize a CNN architecture
 % -------------------------------------------------------------------------
-
-net = initializeCharacterCNN() ;
+net = nets(i);
+% net = initializeSimpleCNN() ;
+% net = initializeNewCNN() ;
 
 % -------------------------------------------------------------------------
 % Part 4.3: train and evaluate the CNN
@@ -24,13 +35,13 @@ trainOpts.numEpochs = 15 ;
 trainOpts.continue = true ;
 trainOpts.useGpu = false ;
 trainOpts.learningRate = 0.001 ;
-trainOpts.expDir = 'results/vsa-experiment' ;
+trainOpts.expDir = ['results/New Architectural Tests/vsa-experiment-' char(descriptions(i))];
 trainOpts = vl_argparse(trainOpts, varargin);
 
 % Take the average image out
-% imdb = load('data/matfile.mat') ;
-% imageMean = mean(imdb.images.data(:)) ;
-% imdb.images.data = imdb.images.data - imageMean ;
+imageMean = mean(imdb.images(:)) ;
+imdb.images = imdb.images - imageMean ;
+net.imageMean = imageMean;
 
 % Convert to a GPU array if needed
 if trainOpts.useGpu
@@ -47,6 +58,14 @@ end
 
 % Save the result for later use
 net.layers(end) = [] ;
-net.imageMean = imageMean ;
-save('results/vsa-experiment/vsa.mat', '-struct', 'net') ;
+save([trainOpts.expDir '/vsa.mat'], '-struct', 'net') ;
 
+% Perform evaluation
+testDir = 'D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/dataset_4500_1500/test';
+[confusionMatrix, precision, recall, f_measure, accuracy, summaryString] = evaluateModel(testDir, net);
+disp(summaryString)
+
+metricsFile = fopen([trainOpts.expDir '/metrics.txt'], 'w');
+fprintf(metricsFile, summaryString);
+
+end

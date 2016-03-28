@@ -23,8 +23,12 @@ opts.plotDiagnostics = false ;
 opts = vl_argparse(opts, varargin) ;
 
 if ~exist(opts.expDir, 'dir'), mkdir(opts.expDir) ; end
-if isempty(opts.train), opts.train = find(imdb.labels); end %find(imdb.images.set==1) ; end
-if isempty(opts.val), opts.val = find(imdb.labels); end %find(imdb.images.set==2) ; end
+
+%%%%%% Change the extraction of the training and validation sets depending on your dataset %%%%%%%%%%%%
+
+if isempty(opts.train), opts.train = find(imdb.partitions == 1) ; end
+% if isempty(opts.val), opts.val = find(imdb.partitions == 2) ; end % skip
+% validation here since we're doing it after training
 if isnan(opts.train), opts.train = [] ; end
 
 % -------------------------------------------------------------------------
@@ -169,8 +173,8 @@ for epoch=1:opts.numEpochs
 
     fprintf(' %.2f s (%.1f images/s)', batch_time, speed) ;
     n = t + numel(batch) - 1 ;
-    fprintf(' err %.1f err5 %.1f', ...
-      info.train.error(end)/n*100, info.train.topFiveError(end)/n*100) ;
+%     fprintf(' err %.1f err5 %.1f', ...
+%       info.train.error(end)/n*100, info.train.topFiveError(end)/n*100) ;
     fprintf('\n') ;
 
     % debug info
@@ -180,37 +184,37 @@ for epoch=1:opts.numEpochs
   end % next batch
 
   % evaluation on validation set
-  for t=1:opts.batchSize:numel(val)
-    batch_time = tic ;
-    batch = val(t:min(t+opts.batchSize-1, numel(val))) ;
-    fprintf('validation: epoch %02d: processing batch %3d of %3d ...', epoch, ...
-            fix(t/opts.batchSize)+1, ceil(numel(val)/opts.batchSize)) ;
-    [im, labels] = getBatch(imdb, batch) ;
-    if opts.prefetch
-      nextBatch = val(t+opts.batchSize:min(t+2*opts.batchSize-1, numel(val))) ;
-      getBatch(imdb, nextBatch) ;
-    end
-    if opts.useGpu
-      im = gpuArray(im) ;
-    end
-
-    net.layers{end}.class = labels ;
-    res = vl_simplenn(net, im, [], res, ...
-      'disableDropout', true, ...
-      'conserveMemory', opts.conserveMemory, ...
-      'sync', opts.sync) ;
-
-    % print information
-    batch_time = toc(batch_time) ;
-    speed = numel(batch)/batch_time ;
-    info.val = updateError(opts, info.val, net, res, batch_time) ;
-
-    fprintf(' %.2f s (%.1f images/s)', batch_time, speed) ;
-    n = t + numel(batch) - 1 ;
-    fprintf(' err %.1f err5 %.1f', ...
-      info.val.error(end)/n*100, info.val.topFiveError(end)/n*100) ;
-    fprintf('\n') ;
-  end
+%   for t=1:opts.batchSize:numel(val)
+%     batch_time = tic ;
+%     batch = val(t:min(t+opts.batchSize-1, numel(val))) ;
+%     fprintf('validation: epoch %02d: processing batch %3d of %3d ...', epoch, ...
+%             fix(t/opts.batchSize)+1, ceil(numel(val)/opts.batchSize)) ;
+%     [im, labels] = getBatch(imdb, batch) ;
+%     if opts.prefetch
+%       nextBatch = val(t+opts.batchSize:min(t+2*opts.batchSize-1, numel(val))) ;
+%       getBatch(imdb, nextBatch) ;
+%     end
+%     if opts.useGpu
+%       im = gpuArray(im) ;
+%     end
+% 
+%     net.layers{end}.class = labels ;
+%     res = vl_simplenn(net, im, [], res, ...
+%       'disableDropout', true, ...
+%       'conserveMemory', opts.conserveMemory, ...
+%       'sync', opts.sync) ;
+% 
+%     % print information
+%     batch_time = toc(batch_time) ;
+%     speed = numel(batch)/batch_time ;
+%     info.val = updateError(opts, info.val, net, res, batch_time) ;
+% 
+%     fprintf(' %.2f s (%.1f images/s)', batch_time, speed) ;
+%     n = t + numel(batch) - 1 ;
+%     fprintf(' err %.1f err5 %.1f', ...
+%       info.val.error(end)/n*100, info.val.topFiveError(end)/n*100) ;
+%     fprintf('\n') ;
+%   end
 
   % save
   info.train.objective(end) = info.train.objective(end) / numel(train) ;
@@ -239,11 +243,11 @@ for epoch=1:opts.numEpochs
       plot(1:epoch, info.train.topFiveError, 'k--') ;
       plot(1:epoch, info.val.error, 'b') ;
       plot(1:epoch, info.val.topFiveError, 'b--') ;
-      h=legend('train','train-5','val','val-5') ;
+%       h=legend('train','train-5','val','val-5') ;
     case 'binary'
       plot(1:epoch, info.train.error, 'k') ; hold on ;
       plot(1:epoch, info.val.error, 'b') ;
-      h=legend('train','val') ;
+%       h=legend('train','val') ;
   end
   grid on ;
   xlabel('training epoch') ; ylabel('error') ;
@@ -269,8 +273,10 @@ switch opts.errorType
     error = ~bsxfun(@eq, predictions, reshape(labels, 1, 1, 1, [])) ;
     info.error(end) = info.error(end) +....
       sum(sum(sum(error(:,:,1,:))))/n ;
+  % Not sure, but changed 1:5 to 1:3, because it seems that the number of
+  % classes do not allow for top 5 errors
     info.topFiveError(end) = info.topFiveError(end) + ...
-      sum(sum(sum(min(error(:,:,1:5,:),[],3))))/n ;
+      sum(sum(sum(min(error(:,:,1:3,:),[],3))))/n ;
   case 'binary'
     error = bsxfun(@times, predictions, labels) < 0 ;
     info.error(end) = info.error(end) + sum(error(:))/n ;
