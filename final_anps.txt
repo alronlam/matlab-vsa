@@ -1,3 +1,6 @@
+0 -2.00
+1 0.00
+2 2.00
 beautiful_flower 1.77
 beautiful_girl 1.67
 beautiful_view 1.69

@@ -12,7 +12,7 @@ imdb = load('luminance-4500-1500.mat') ;
 % vgg_net = load('imagenet-vgg-f.mat');
 % vl_displaysimplenn(vgg_net);
 
-descriptions = { 'Simple CNN with Relu - Luminance' };
+descriptions = { 'Simple CNN with Relu' };
 nets = [ initializeSimpleCNNWRelu()];
 % descriptions = {'Simple CNN With 3 FCs'; 'Simple CNN with 4 FCs'; 'Simple CNN w/ Relu'; 'New CNN with less Relu'};
 % nets = [initializeSimpleCNNWithMoreFC(), initializeSimpleCNNWithEvenMoreFC()...
@@ -31,7 +31,7 @@ net = nets(i);
 % -------------------------------------------------------------------------
 
 trainOpts.batchSize = 100 ;
-trainOpts.numEpochs = 40 ;
+trainOpts.numEpochs = 15 ;
 trainOpts.continue = true ;
 trainOpts.useGpu = false ;
 trainOpts.learningRate = 0.001 ;
@@ -61,7 +61,7 @@ net.layers(end) = [] ;
 save([trainOpts.expDir '/vsa.mat'], '-struct', 'net') ;
 
 % Perform evaluation
-testDir = 'D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/luminance_4500_1500/test';
+testDir = 'D:/DLSU/Masters/Term 2/CSC930M/Final Project/project_files/dataset_4500_1500/test';
 [confusionMatrix, precision, recall, f_measure, accuracy, summaryString] = evaluateModel(testDir, net);
 disp(summaryString)
 

@@ -1,7 +1,7 @@
 function [confusionMatrix, precision, recall, f_measure, accuracy, summaryString] = evaluateModel(testDir, net)
 
-% testDir = 'dataset_4500_1500/test';
-% net = load('results/New Architectural Tests/vsa-experiment-Close CNN/vsa.mat') ;
+% testDir = 'luminance_4500_1500/test';
+% net = load('results/New Architectural Tests/vsa-experiment-Simple CNN with Relu - Luminance/vsa.mat') ;
 try
     net.imageMean;
 catch exception
@@ -34,7 +34,13 @@ for i = 3:nFolders
         end
         im_ = 255 * im_;
 
-        res = vl_simplenn(net, im_);
+        try
+            res = vl_simplenn(net, im_);
+        catch
+            im_ = repmat(im_,[1 1 3]);
+            res = vl_simplenn(net, im_);
+        end
+        
         scores = squeeze(gather(res(end).x)) ;
         [bestScore, best] = max(scores) ;
         confusionMatrix(correctClass, best) = confusionMatrix(correctClass, best) + 1;
@@ -69,7 +75,7 @@ summaryString = [summaryString sprintf('Precision, Recall, F-Measure:\n') ...
     sprintf('%0.4f\t%0.4f\t%0.4f\n', ...
                         precision, recall, f_measure)];
 
-%                     disp(summaryString);
+                    disp(summaryString);
                     
 % summaryString = ['Confusion Matrix' char(10) mat2str(confusionMatrix) ...
 %     char(10) 'Precision: '  num2str(precision) ...
